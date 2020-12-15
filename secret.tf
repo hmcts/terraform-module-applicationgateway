@@ -6,7 +6,7 @@ data "azurerm_key_vault" "main" {
 }
 
 resource "azurerm_key_vault_secret" "internal-fe-lb-ip" {
-  count = length(var.frontends) != 0 ? 1 : 0
+  count = (length(var.frontends) != 0  && var.store_privateip == "true")? 1 : 0
 
   name         = "internal-fe-lb-ip"
   value        = var.private_ip_address
