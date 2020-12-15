@@ -1,2 +1,36 @@
-# terraform-module-applicationgateway
-Terraform module for Azure Application Gateway
+
+# https://github.com/hmcts/terraform-module-applicationgateway
+
+Terraform module to create Azure Application Gateway resource.
+
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| azurerm | n/a |
+| azurerm.data | n/a |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| common\_tags | Common Tags | `map(string)` | n/a | yes |
+| destinations | List of IP addresses to direct traffic to | `list(string)` | n/a | yes |
+| env | environment, will be used in resource names and for looking up the vnet details | `any` | n/a | yes |
+| frontends | n/a | `list(any)` | n/a | yes |
+| location | location to deploy resources to | `any` | n/a | yes |
+| max\_capacity | Maximum capacity for autoscaling | `number` | `10` | no |
+| min\_capacity | Minimum capacity for autoscaling | `number` | `2` | no |
+| oms\_env | Name of the enviornment for log analytics workspace | `any` | n/a | yes |
+| private\_ip\_address | IP address to allocate staticly to app gateway, must be in the subnet for the env | `any` | n/a | yes |
+| subscription | subscription, will be used for looking up the keyvault details | `any` | n/a | yes |
+| vault\_name | vault name | `any` | n/a | yes |
+
+## Outputs
+
+No output.
+
