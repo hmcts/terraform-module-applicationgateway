@@ -45,3 +45,22 @@ variable common_tags {
 variable "oms_env" {
   description = "Name of the enviornment for log analytics workspace"
 }
+
+variable "project" {
+  description = "Name of the project"
+  type        = string
+
+}
+variable "vnet_rg" {
+  description = "Name of the virtual Network resource group"
+  type        = string
+}
+variable "vnet_name" {
+  description = "Name of the Virtual Network"
+  type        = string
+}
+variable "store_privateip" {
+  description = "Storage application gateway's private IP in vault?"
+  type = bool
+  default = false
+}
