@@ -158,19 +158,12 @@ data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
   resource_id = azurerm_application_gateway.ag[0].id
 }
 
-data "azurerm_log_analytics_workspace" "log_analytics" {
-  provider = "azurerm.data"
-  count    = length(var.frontends) != 0 ? 1 : 0
-
-  name                = "hmcts-${var.oms_env}"
-  resource_group_name = "oms-automation"
-}
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(var.frontends) != 0 ? 1 : 0
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
-  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.log_analytics[0].id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
 
   dynamic "log" {
     for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories[0].logs : {

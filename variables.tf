@@ -64,3 +64,7 @@ variable "store_privateip" {
   type = bool
   default = false
 }
+variable "log_analytics_workspace_id" {
+  description = "Enter log analytics workspace id"
+  type        = string
+}
