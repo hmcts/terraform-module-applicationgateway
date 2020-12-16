@@ -1,5 +1,5 @@
 data "azurerm_key_vault" "main" {
-  count = (length(var.frontends) != 0  && var.store_privateip == "true")? 1 : 0
+  count = (length(var.frontends) != 0  && var.store_privateip == "true") ? 1 : 0
 
   name                = var.vault_name
   resource_group_name = "core-infra-${var.subscription}-rg"
