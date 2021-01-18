@@ -34,7 +34,7 @@ variable "destinations" {
 }
 
 variable "frontends" {
-  type = list(any)
+  # type = list(any)
 
 }
 
