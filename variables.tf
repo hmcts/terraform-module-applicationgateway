@@ -33,10 +33,7 @@ variable "destinations" {
   description = "List of IP addresses to direct traffic to"
 }
 
-variable "frontends" {
-  # type = list(any)
-
-}
+variable "frontends" {}
 
 variable common_tags {
   description = "Common Tags"
