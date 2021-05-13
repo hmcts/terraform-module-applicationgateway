@@ -6,6 +6,10 @@ variable "subscription" {
   description = "subscription, will be used for looking up the keyvault details"
 }
 
+variable "key_vault_resource_group" {
+  description = "key vault name"
+}
+
 variable "vault_name" {
   description = "vault name"
 }
