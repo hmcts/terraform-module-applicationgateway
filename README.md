@@ -27,7 +27,6 @@ No requirements.
 | oms\_env | Name of the enviornment for log analytics workspace | `any` | n/a | yes |
 | private\_ip\_address | IP address to allocate staticly to app gateway, must be in the subnet for the env | `any` | n/a | yes |
 | project | Name of the project | `string` | n/a | yes |
-| store\_privateip | Storage application gateway's private IP in vault? | `bool` | `false` | no |
 | subscription | subscription, will be used for looking up the keyvault details | `any` | n/a | yes |
 | vault\_name | vault name | `any` | n/a | yes |
 | vnet\_name | Name of the Virtual Network | `string` | n/a | yes |
