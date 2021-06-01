@@ -60,11 +60,7 @@ variable "vnet_name" {
   description = "Name of the Virtual Network"
   type        = string
 }
-variable "store_privateip" {
-  description = "Storage application gateway's private IP in vault?"
-  type = bool
-  default = false
-}
+
 variable "log_analytics_workspace_id" {
   description = "Enter log analytics workspace id"
   type        = string
