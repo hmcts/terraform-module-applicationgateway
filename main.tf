@@ -67,7 +67,7 @@ resource "azurerm_application_gateway" "ag" {
     for_each = [for app in var.frontends : {
       name = app.name
       host = app.custom_domain
-      path = lookup(app, "health_path_override", "/health/liveness")
+      path = lookup(app, "health_path", "/health/liveness")
     }]
 
     content {
