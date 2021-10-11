@@ -31,7 +31,7 @@ variable "destinations" {
 
 variable "frontends" {}
 
-variable common_tags {
+variable "common_tags" {
   description = "Common Tags"
   type        = map(string)
 }
@@ -56,4 +56,8 @@ variable "vnet_name" {
 variable "log_analytics_workspace_id" {
   description = "Enter log analytics workspace id"
   type        = string
+}
+
+variable "enable_multiple_availability_zones" {
+  default = false
 }
