@@ -22,6 +22,8 @@ No requirements.
 | frontends | n/a | `list(any)` | n/a | yes |
 | location | location to deploy resources to | `any` | n/a | yes |
 | log\_analytics\_workspace\_id | Enter log analytics workspace id | `string` | n/a | yes |
+| sku\_name | SKU name for app gateway | `string` | `Standard_v2` | no |
+| sku\_tier | SKU tier for app gateway | `string` | `Standard_v2` | no |
 | max\_capacity | Maximum capacity for autoscaling | `number` | `10` | no |
 | min\_capacity | Minimum capacity for autoscaling | `number` | `2` | no |
 | oms\_env | Name of the enviornment for log analytics workspace | `any` | n/a | yes |
@@ -30,6 +32,7 @@ No requirements.
 | subscription | subscription, will be used for looking up the keyvault details | `any` | n/a | yes |
 | vnet\_name | Name of the Virtual Network | `string` | n/a | yes |
 | vnet\_rg | Name of the virtual Network resource group | `string` | n/a | yes |
+| enable\_waf | Should WAF should be enabled | `boolean` | false | no |
 
 ## Outputs
 
