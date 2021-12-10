@@ -75,3 +75,8 @@ variable "enable_multiple_availability_zones" {
 variable "enable_waf" {
   default = false
 }
+
+variable "waf_mode" {
+  description = "Mode for waf to run in"
+  default = "Detection"
+}

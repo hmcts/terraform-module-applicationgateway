@@ -33,6 +33,7 @@ No requirements.
 | vnet\_name | Name of the Virtual Network | `string` | n/a | yes |
 | vnet\_rg | Name of the virtual Network resource group | `string` | n/a | yes |
 | enable\_waf | Should WAF should be enabled | `boolean` | false | no |
+| waf\_mode | Mode the WAF should run in | `string` | `Detection` | no |
 
 ## Outputs
 
