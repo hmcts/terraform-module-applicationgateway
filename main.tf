@@ -22,8 +22,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = "Standard_v2"
-    tier = "Standard_v2"
+    name = var.sku_name
+    tier = var.sku_tier
   }
 
   autoscale_configuration {
@@ -34,6 +34,13 @@ resource "azurerm_application_gateway" "ag" {
   gateway_ip_configuration {
     name      = "gateway"
     subnet_id = data.azurerm_subnet.app_gw.id
+  }
+
+  waf_configuration {
+    enabled          = var.enabled_waf
+    firewall_mode    = "Prevention"
+    rule_set_type    = "OWASP"
+    rule_set_version = "3.1"
   }
 
   frontend_port {

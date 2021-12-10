@@ -10,6 +10,16 @@ variable "location" {
   description = "location to deploy resources to"
 }
 
+variable "sku_name" {
+  description = "name of the SKU to use for Application Gateway"
+  default     = "Standard_v2"
+}
+
+variable "sku_tier" {
+  description = "tier of the SKU to use for Application Gateway"
+  default     = "Standard_v2"
+}
+
 variable "min_capacity" {
   description = "Minimum capacity for autoscaling"
   default     = 2
@@ -59,5 +69,9 @@ variable "log_analytics_workspace_id" {
 }
 
 variable "enable_multiple_availability_zones" {
+  default = false
+}
+
+variable "enable_waf" {
   default = false
 }
