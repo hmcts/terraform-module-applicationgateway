@@ -8,7 +8,7 @@ data "azurerm_subnet" "app_gw" {
 resource "azurerm_public_ip" "app_gw" {
   count = length(var.frontends) != 0 ? 1 : 0
 
-  name                = "aks-fe-appgw-${var.env}-pip"
+  name                = (var.create_new_agw == true) ? "aks-frontend-appgw-${var.env}-pip" : "aks-fe-appgw-${var.env}-pip"
   location            = var.location
   resource_group_name = var.vnet_rg
   sku                 = "Standard"

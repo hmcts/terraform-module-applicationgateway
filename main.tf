@@ -13,7 +13,7 @@ locals {
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = "aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  name                = (var.create_new_agw == true) ? "aks-frontend-${format("%02d", count.index)}-${var.env}-agw" : "aks-fe-${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
