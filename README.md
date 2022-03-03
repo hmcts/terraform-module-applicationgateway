@@ -18,6 +18,7 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | common\_tags | Common Tags | `map(string)` | n/a | yes |
 | destinations | List of IP addresses to direct traffic to | `list(string)` | n/a | yes |
+| enable\_multiple\_availability_zones | Create application gateway with multiple availability zones | `boolean` | false | no |
 | env | environment, will be used in resource names and for looking up the vnet details | `any` | n/a | yes |
 | frontends | n/a | `list(any)` | n/a | yes |
 | location | location to deploy resources to | `any` | n/a | yes |
