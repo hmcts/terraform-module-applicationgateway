@@ -10,10 +10,11 @@
 
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
+  resource_prefix = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = (var.resource_prefix != null) ? "${var.resource_prefix}-aks-fe-${format("%02d", count.index)}-${var.env}-agw" : "aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  name                = "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
