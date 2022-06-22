@@ -62,10 +62,6 @@ variable "enable_multiple_availability_zones" {
   default = false
 }
 
-variable "public_ip_enable_multiple_availability_zones" {
-  default = false
-}
-
 variable "resource_prefix" {
   description = "Optional name prefix for resources"
   type        = string
