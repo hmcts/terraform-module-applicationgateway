@@ -81,6 +81,11 @@ resource "azurerm_application_gateway" "ag" {
       protocol            = "Http"
       timeout             = 15
       unhealthy_threshold = 3
+
+      match {
+        body = ""
+        status_code = ["200-399"]
+      }
     }
   }
 
