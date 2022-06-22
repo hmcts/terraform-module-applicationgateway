@@ -14,4 +14,5 @@ resource "azurerm_public_ip" "app_gw" {
   sku                 = "Standard"
   allocation_method   = "Static"
   tags                = var.common_tags
+  zones               = var.public_ip_enable_multiple_availability_zones == true ? ["1", "2", "3"] : []
 }
