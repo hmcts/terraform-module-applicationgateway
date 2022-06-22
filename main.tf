@@ -77,6 +77,7 @@ resource "azurerm_application_gateway" "ag" {
       name                = probe.value.name
       host                = probe.value.host
       path                = probe.value.path
+      port                = 0
       protocol            = "Http"
       timeout             = 15
       unhealthy_threshold = 3
