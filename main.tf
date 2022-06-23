@@ -81,10 +81,10 @@ resource "azurerm_application_gateway" "ag" {
       timeout             = 15
       unhealthy_threshold = 3
 
-      match {
-        body = ""
-        status_code = ["200-399"]
-      }
+      # match {
+      #   body = ""
+      #   status_code = ["200-399"]
+      # }
     }
   }
 
