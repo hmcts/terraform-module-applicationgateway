@@ -117,7 +117,8 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "request_routing_rule" {
     for_each = [for app in var.frontends : {
-      name = app.name
+      name     = app.name
+      priority = index(var.frontends, app)
     }]
 
     content {
@@ -127,6 +128,7 @@ resource "azurerm_application_gateway" "ag" {
       backend_address_pool_name  = request_routing_rule.value.name
       backend_http_settings_name = request_routing_rule.value.name
       rewrite_rule_set_name      = local.x_fwded_proto_ruleset
+      priority                   = request_routing_rule.value.priority +1
     }
   }
 
