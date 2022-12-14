@@ -115,13 +115,15 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "request_routing_rule" {
-    for_each = [for app in var.frontends : {
+    for_each = [for i, app in var.frontends : {
       name = app.name
+      priority = ((i + 1) * 10)
     }]
 
     content {
       name                       = request_routing_rule.value.name
       rule_type                  = "Basic"
+      priority                   = request_routing_rule.value.priority
       http_listener_name         = request_routing_rule.value.name
       backend_address_pool_name  = request_routing_rule.value.name
       backend_http_settings_name = request_routing_rule.value.name
