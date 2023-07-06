@@ -73,7 +73,7 @@ resource "azurerm_application_gateway" "ag" {
     }]
 
     content {
-      interval            = 10
+      interval            = 20
       name                = probe.value.name
       host                = probe.value.host
       path                = probe.value.path
