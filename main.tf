@@ -156,30 +156,14 @@ resource "azurerm_application_gateway" "ag" {
   }
 }
 
-data "azurerm_monitor_diagnostic_categories" "diagnostic_categories" {
-  count = length(var.frontends) != 0 ? 1 : 0
-
-  resource_id = azurerm_application_gateway.ag[0].id
-}
-
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                       = "AppGw"
   count                      = length(var.frontends) != 0 ? 1 : 0
   target_resource_id         = azurerm_application_gateway.ag[count.index].id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  dynamic "metric" {
-    for_each = [for category in data.azurerm_monitor_diagnostic_categories.diagnostic_categories[0].metrics : {
-      category = category
-    }]
-
-    content {
-      category = metric.value.category
-      enabled  = true
-      retention_policy {
-        enabled = true
-      }
-    }
+  metric {
+    category = "AllMetrics"
+    enabled  = true
   }
 }
