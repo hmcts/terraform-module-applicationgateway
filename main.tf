@@ -10,7 +10,7 @@
 
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
-  resource_prefix = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
+  resource_prefix       = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
 }
 
 resource "azurerm_application_gateway" "ag" {
@@ -116,7 +116,7 @@ resource "azurerm_application_gateway" "ag" {
 
   dynamic "request_routing_rule" {
     for_each = [for i, app in var.frontends : {
-      name = app.name
+      name     = app.name
       priority = ((i + 1) * 10)
     }]
 
