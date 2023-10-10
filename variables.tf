@@ -16,7 +16,7 @@ variable "min_capacity" {
 }
 
 variable "send_access_logs_to_log_analytics" {
-  description = "Send access logs to log analytics workspace, this can be quite expensive on busy FrontDoor instances so disable it and send to Storage account instead"
+  description = "Send access logs to log analytics workspace, this can be quite expensive on busy instances so disable it and send to Storage account instead"
   default     = false
 }
 

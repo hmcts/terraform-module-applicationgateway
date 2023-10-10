@@ -41,7 +41,7 @@ No requirements.
 | <a name="input_private_ip_address"></a> [private\_ip\_address](#input\_private\_ip\_address) | IP address to allocate staticly to app gateway, must be in the subnet for the env | `any` | n/a | yes |
 | <a name="input_project"></a> [project](#input\_project) | Name of the project | `string` | n/a | yes |
 | <a name="input_resource_prefix"></a> [resource\_prefix](#input\_resource\_prefix) | Optional name prefix for resources | `string` | `null` | no |
-| <a name="input_send_access_logs_to_log_analytics"></a> [send\_access\_logs\_to\_log\_analytics](#input\_send\_access\_logs\_to\_log\_analytics) | Send access logs to log analytics workspace, this can be quite expensive on busy FrontDoor instances so disable it and send to Storage account instead | `bool` | `false` | no |
+| <a name="input_send_access_logs_to_log_analytics"></a> [send\_access\_logs\_to\_log\_analytics](#input\_send\_access\_logs\_to\_log\_analytics) | Send access logs to log analytics workspace, this can be quite expensive on busy instances so disable it and send to Storage account instead | `bool` | `false` | no |
 | <a name="input_subscription"></a> [subscription](#input\_subscription) | subscription, will be used for looking up the keyvault details | `any` | n/a | yes |
 | <a name="input_vnet_name"></a> [vnet\_name](#input\_vnet\_name) | Name of the Virtual Network | `string` | n/a | yes |
 | <a name="input_vnet_rg"></a> [vnet\_rg](#input\_vnet\_rg) | Name of the virtual Network resource group | `string` | n/a | yes |
