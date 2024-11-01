@@ -154,4 +154,23 @@ resource "azurerm_application_gateway" "ag" {
       }
     }
   }
+
+  waf_configuration {
+    enabled          = var.enabled
+    firewall_mode    = var.firewall_mode
+    rule_set_version = var.rule_set_version
+    rule_set_type    = var.rule_set_type
+    disabled_rule_group {
+      rule_group_name = var.rule_group_name
+      rules           = var.rules
+    }
+    file_upload_limit_mb     = var.file_upload_limit_mb
+    request_body_check       = var.request_body_check
+    max_request_body_size_kb = var.max_request_body_size_kb
+    exclusion {
+      match_variable          = var.match_variable
+      selector_match_operator = var.selector_match_operator
+      selector                = var.selector
+    }
+  }
 }

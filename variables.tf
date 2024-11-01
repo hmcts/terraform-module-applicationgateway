@@ -77,3 +77,70 @@ variable "resource_prefix" {
   type        = string
   default     = null
 }
+
+variable "enabled" {
+  description = "Is the Web Application Firewall enabled?"
+  type        = bool
+  default     = false
+}
+
+variable "firewall_mode" {
+  description = "The Web Application Firewall Mode. Possible values are Detection and Prevention"
+  type        = string
+  default     = "Detection"
+}
+
+variable "rule_set_version" {
+  description = "The Version of the Rule Set used for this Web Application Firewall. Possible values are 0.1, 1.0, 2.1, 2.2.9, 3.0, 3.1 and 3.2"
+  default     = 3.2
+}
+
+variable "rule_set_type" {
+  description = "The Type of the Rule Set used for this Web Application Firewall. Possible values are OWASP, Microsoft_BotManagerRuleSet and Microsoft_DefaultRuleSet. Defaults to OWASP."
+  type        = string
+  default     = "OWASP"
+}
+
+variable "file_upload_limit_mb" {
+  description = "The File Upload Limit in MB. Accepted values are in the range 1MB to 750MB for the WAF_v2 SKU, and 1MB to 500MB for all other SKUs. Defaults to 100MB."
+  type        = string
+  default     = "100MB"
+}
+
+variable "request_body_check" {
+  description = "Is Request Body Inspection enabled? Defaults to true."
+  type        = bool
+  default     = true
+}
+
+variable "max_request_body_size_kb" {
+  description = "The Maximum Request Body Size in KB. Accepted values are in the range 1KB to 128KB. Defaults to 128KB."
+  type        = string
+  default     = "128KB"
+}
+
+variable "rule_group_name" {
+  description = "The rule group where specific rules should be disabled"
+  type        = string
+  default     = null
+}
+
+variable "rules" {
+  description = "A list of rules which should be disabled in that group. Disables all rules in the specified group if rules is not specified."
+  default     = null
+}
+
+variable "match_variable" {
+  description = "Match variable of the exclusion rule to exclude header, cookie or GET arguments"
+  default     = null
+}
+
+variable "selector_match_operator" {
+  description = "Operator which will be used to search in the variable content."
+  default     = null
+}
+
+variable "selector" {
+  description = " String value which will be used for the filter operation. If empty will exclude all traffic on this match_variable"
+  default     = null
+}
