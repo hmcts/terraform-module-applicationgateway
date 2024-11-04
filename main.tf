@@ -55,7 +55,7 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "waf_configuration" {
-    for_each = var.frontends
+    for_each = var.frontends.sku.tier == "WAF_v2" ? [1] : []
 
     content {
       enabled          = var.enable_waf
