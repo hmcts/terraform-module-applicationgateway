@@ -77,3 +77,16 @@ variable "resource_prefix" {
   type        = string
   default     = null
 }
+
+variable "enable_waf" {
+  default = false
+}
+
+variable "waf_mode" {
+  description = "Mode for waf to run in"
+  default     = "Detection"
+}
+
+variable "exclusions" {
+  default = []
+}
