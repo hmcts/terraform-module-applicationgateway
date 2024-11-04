@@ -90,3 +90,7 @@ variable "waf_mode" {
 variable "exclusions" {
   default = []
 }
+
+variable "sku_tier" {
+  type = string
+}
