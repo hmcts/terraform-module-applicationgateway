@@ -54,25 +54,20 @@ resource "azurerm_application_gateway" "ag" {
     private_ip_address_allocation = "Static"
   }
 
-  dynamic "waf_configuration" {
-    for_each = azurerm_application_gateway.ag.sku.tier == "WAF_v2" ? [1] : []
+  waf_configuration {
+    enabled          = var.enable_waf
+    firewall_mode    = var.waf_mode
+    rule_set_type    = "OWASP"
+    rule_set_version = "3.1"
 
-    content {
-      enabled          = var.enable_waf
-      firewall_mode    = var.waf_mode
-      rule_set_type    = "OWASP"
-      rule_set_version = "3.1"
+    dynamic "exclusion" {
+      iterator = exclusion
+      for_each = var.exclusions
 
-
-      dynamic "exclusion" {
-        iterator = exclusion
-        for_each = var.exclusions
-
-        content {
-          match_variable          = exclusion.value.match_variable
-          selector_match_operator = exclusion.value.operator
-          selector                = exclusion.value.selector
-        }
+      content {
+        match_variable          = exclusion.value.match_variable
+        selector_match_operator = exclusion.value.operator
+        selector                = exclusion.value.selector
       }
     }
   }
