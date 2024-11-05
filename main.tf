@@ -23,8 +23,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = "Standard_v2"
-    tier = "Standard_v2"
+    name = var.enable_waf == true ? "WAF_V2" : var.ag_sku_name
+    tier = var.enable_waf == true ? "WAF_V2" : var.ag_sku_name
   }
 
   autoscale_configuration {
@@ -55,7 +55,7 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "waf_configuration" {
-    for_each = var.enable_waf ? [] : [1]
+    for_each = var.enable_waf ? [1] : []
     content {
       enabled          = var.enable_waf
       firewall_mode    = var.waf_mode
