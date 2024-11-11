@@ -90,13 +90,3 @@ variable "waf_mode" {
 variable "exclusions" {
   default = []
 }
-
-variable "ag_sku_name" {
-  description = "SKU name for the application gateway"
-  default     = "Standard_v2"
-}
-
-variable "ag_sku_tier" {
-  description = "SKU tier for the application gateway"
-  default     = "Standard_v2"
-}
