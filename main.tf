@@ -23,8 +23,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = var.enable_waf == true ? "WAF_v2" : var.ag_sku_name
-    tier = var.enable_waf == true ? "WAF_v2" : var.ag_sku_name
+    name = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
+    tier = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
   }
 
   autoscale_configuration {
