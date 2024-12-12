@@ -23,8 +23,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = "Standard_v2"
-    tier = "Standard_v2"
+    name = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
+    tier = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
   }
 
   autoscale_configuration {
@@ -52,6 +52,27 @@ resource "azurerm_application_gateway" "ag" {
     subnet_id                     = data.azurerm_subnet.app_gw.id
     private_ip_address            = var.private_ip_address
     private_ip_address_allocation = "Static"
+  }
+
+  dynamic "waf_configuration" {
+    for_each = var.enable_waf ? [1] : []
+    content {
+      enabled          = var.enable_waf
+      firewall_mode    = var.waf_mode
+      rule_set_type    = "OWASP"
+      rule_set_version = "3.1"
+
+      dynamic "exclusion" {
+        iterator = exclusion
+        for_each = var.exclusions
+
+        content {
+          match_variable          = exclusion.value.match_variable
+          selector_match_operator = exclusion.value.operator
+          selector                = exclusion.value.selector
+        }
+      }
+    }
   }
 
   dynamic "backend_address_pool" {
