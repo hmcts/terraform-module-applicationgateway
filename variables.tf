@@ -90,8 +90,3 @@ variable "waf_mode" {
 variable "exclusions" {
   default = []
 }
-
-variable "app_gateway_name" {
-  description = "The name of the Application Gateway"
-  default     = null
-}
