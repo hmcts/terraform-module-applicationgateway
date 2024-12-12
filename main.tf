@@ -11,7 +11,7 @@
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
   resource_prefix       = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
-  app_gateway_name      = var.app_gateway_name != null ? var.app_gateway_name : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  app_gateway_name      = var.enable_waf ? "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw-waf" : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
 }
 
 resource "azurerm_application_gateway" "ag" {
