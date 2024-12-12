@@ -11,10 +11,11 @@
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
   resource_prefix       = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
+  app_gateway_name      = var.app_gateway_name != null ? var.app_gateway_name : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  name                = local.app_gateway_name
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
@@ -23,8 +24,8 @@ resource "azurerm_application_gateway" "ag" {
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
-    tier = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
+    name = "Standard_v2"
+    tier = "Standard_v2"
   }
 
   autoscale_configuration {
@@ -52,27 +53,6 @@ resource "azurerm_application_gateway" "ag" {
     subnet_id                     = data.azurerm_subnet.app_gw.id
     private_ip_address            = var.private_ip_address
     private_ip_address_allocation = "Static"
-  }
-
-  dynamic "waf_configuration" {
-    for_each = var.enable_waf ? [1] : []
-    content {
-      enabled          = var.enable_waf
-      firewall_mode    = var.waf_mode
-      rule_set_type    = "OWASP"
-      rule_set_version = "3.1"
-
-      dynamic "exclusion" {
-        iterator = exclusion
-        for_each = var.exclusions
-
-        content {
-          match_variable          = exclusion.value.match_variable
-          selector_match_operator = exclusion.value.operator
-          selector                = exclusion.value.selector
-        }
-      }
-    }
   }
 
   dynamic "backend_address_pool" {
