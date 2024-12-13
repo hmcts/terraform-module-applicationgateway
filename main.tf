@@ -14,7 +14,7 @@ locals {
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = var.enable_waf ? "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw-waf" : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  name                = var.enable_waf ? "${local.resource_prefix}fe-${format("%02d", count.index)}-${var.env}-agw-waf" : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
