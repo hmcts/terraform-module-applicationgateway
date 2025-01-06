@@ -96,3 +96,8 @@ variable "app_gateway_name" {
   type        = string
   default     = null
 }
+
+variable "waf_policy_name" {
+  description = "Name of the waf policy resource group"
+  type        = string
+}

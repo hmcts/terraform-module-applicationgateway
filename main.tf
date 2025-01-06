@@ -19,6 +19,7 @@ resource "azurerm_application_gateway" "ag" {
   location            = var.location
   tags                = var.common_tags
   zones               = var.enable_multiple_availability_zones == true ? ["1", "2", "3"] : []
+  firewall_policy_id  = var.enable_waf ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
 
   count = length(var.frontends) != 0 ? 1 : 0
 
@@ -52,27 +53,6 @@ resource "azurerm_application_gateway" "ag" {
     subnet_id                     = data.azurerm_subnet.app_gw.id
     private_ip_address            = var.private_ip_address
     private_ip_address_allocation = "Static"
-  }
-
-  dynamic "waf_configuration" {
-    for_each = var.enable_waf ? [1] : []
-    content {
-      enabled          = var.enable_waf
-      firewall_mode    = var.waf_mode
-      rule_set_type    = "OWASP"
-      rule_set_version = "3.1"
-
-      dynamic "exclusion" {
-        iterator = exclusion
-        for_each = var.exclusions
-
-        content {
-          match_variable          = exclusion.value.match_variable
-          selector_match_operator = exclusion.value.operator
-          selector                = exclusion.value.selector
-        }
-      }
-    }
   }
 
   dynamic "backend_address_pool" {
