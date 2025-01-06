@@ -19,7 +19,7 @@ resource "azurerm_application_gateway" "ag" {
   location            = var.location
   tags                = var.common_tags
   zones               = var.enable_multiple_availability_zones == true ? ["1", "2", "3"] : []
-  firewall_policy_id  = var.enable_waf ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
+  firewall_policy_id  = var.enable_waf ? azurerm_web_application_firewall_policy.waf_policy.id : null
 
   count = length(var.frontends) != 0 ? 1 : 0
 
