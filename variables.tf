@@ -97,6 +97,12 @@ variable "app_gateway_name" {
   default     = null
 }
 
+variable "pip_name" {
+  description = "The name of the public ip"
+  type        = string
+  default     = null
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string
