@@ -1,6 +1,6 @@
 
 data "azurerm_subnet" "app_gw" {
-  name                 = "aks-appgw"
+  name                 = var.pubsub_subnet ? "infra-appgws" : "aks-appgw"
   resource_group_name  = var.vnet_rg
   virtual_network_name = var.vnet_name
 }

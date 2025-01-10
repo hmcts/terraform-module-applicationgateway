@@ -103,6 +103,12 @@ variable "pip_name" {
   default     = null
 }
 
+variable "pubsub_subnet" {
+  description = "Use this subnet for pubsub app gateway"
+  type        = bool
+  default     = false
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string
