@@ -14,17 +14,18 @@ locals {
 }
 
 resource "azurerm_application_gateway" "ag" {
-  name                = "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
+  name                = var.app_gateway_name != null ? var.app_gateway_name : "${local.resource_prefix}aks-fe-${format("%02d", count.index)}-${var.env}-agw"
   resource_group_name = var.vnet_rg
   location            = var.location
   tags                = var.common_tags
   zones               = var.enable_multiple_availability_zones == true ? ["1", "2", "3"] : []
+  firewall_policy_id  = var.enable_waf ? azurerm_web_application_firewall_policy.waf_policy[0].id : null
 
   count = length(var.frontends) != 0 ? 1 : 0
 
   sku {
-    name = "Standard_v2"
-    tier = "Standard_v2"
+    name = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
+    tier = var.enable_waf == true ? "WAF_v2" : "Standard_v2"
   }
 
   autoscale_configuration {

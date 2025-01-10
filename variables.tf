@@ -77,3 +77,74 @@ variable "resource_prefix" {
   type        = string
   default     = null
 }
+
+variable "enable_waf" {
+  default = false
+}
+
+variable "waf_mode" {
+  description = "Mode for waf to run in"
+  default     = "Prevention"
+}
+
+variable "exclusions" {
+  default = []
+}
+
+variable "app_gateway_name" {
+  description = "The name of the Application Gateway"
+  type        = string
+  default     = null
+}
+
+variable "pip_name" {
+  description = "The name of the public ip"
+  type        = string
+  default     = null
+}
+
+variable "pubsub_subnet" {
+  description = "Use this subnet for pubsub app gateway"
+  type        = bool
+  default     = false
+}
+
+variable "waf_policy_name" {
+  description = "Name of the waf policy resource group"
+  type        = string
+}
+
+variable "waf_managed_rules" {
+  type = list(object({
+    type    = string
+    version = string
+    rule_group_override = list(object({
+      rule_group_name = string
+      rule = list(object({
+        id      = string
+        enabled = bool
+        action  = string
+      }))
+    }))
+  }))
+  default = null
+}
+
+variable "waf_custom_rules" {
+  type = list(object({
+    name      = string
+    priority  = number
+    rule_type = string
+    match_conditions = list(object({
+      match_variables = list(object({
+        variable_name = string
+        selector      = optional(string)
+      }))
+      operator           = string
+      negation_condition = bool
+      match_values       = list(string)
+    }))
+    action = string
+  }))
+  default = null
+}
