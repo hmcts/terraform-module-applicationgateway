@@ -3,6 +3,7 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
   name                = "${var.waf_policy_name}-${var.env}"
   resource_group_name = var.vnet_rg
   location            = var.location
+  tags                = var.common_tags
 
   policy_settings {
     enabled            = var.enable_waf
