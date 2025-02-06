@@ -58,11 +58,13 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "backend_address_pool" {
     for_each = [for app in var.frontends : {
       name = app.name
+      fqdn = app.backend_fqdn
     }]
 
     content {
       name         = backend_address_pool.value.name
-      ip_addresses = var.destinations
+      ip_addresses = var.destinations != [] ? var.destinations : []
+      fqdns = backend_address_pool.fqdn != [] ? backend_address_pool.fqdn : []
     }
   }
 
