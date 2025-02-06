@@ -64,7 +64,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       name         = backend_address_pool.value.name
       ip_addresses = var.destinations != [] ? var.destinations : []
-      fqdns = backend_address_pool.fqdn != [] ? backend_address_pool.fqdn : []
+      fqdns        = backend_address_pool.fqdn != [] ? backend_address_pool.fqdn : []
     }
   }
 
