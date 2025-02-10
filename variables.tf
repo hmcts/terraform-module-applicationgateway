@@ -37,6 +37,7 @@ variable "private_ip_address" {
 variable "destinations" {
   type        = list(string)
   description = "List of IP addresses to direct traffic to"
+  default     = []
 }
 
 variable "frontends" {}
