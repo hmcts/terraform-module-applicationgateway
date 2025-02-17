@@ -110,6 +110,17 @@ variable "pubsub_subnet" {
   default     = false
 }
 
+variable "ssl_enable" {
+  type    = bool
+  default = false
+}
+
+variable "ssl_certificate_name" {
+  description = "The name of the ssl_certificate"
+  type        = string
+  default     = null
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string

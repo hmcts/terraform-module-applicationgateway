@@ -71,7 +71,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "probe" {
     for_each = [for app in var.frontends : {
       name = app.name
-      host = app.custom_domain
+      host = lookup(app, "host_name", "app.custom_domain")
       path = lookup(app, "health_path", "/health/liveness")
     }]
 
@@ -80,7 +80,7 @@ resource "azurerm_application_gateway" "ag" {
       name                = probe.value.name
       host                = probe.value.host
       path                = probe.value.path
-      protocol            = "Http"
+      protocol            = var.ssl_enable ? "Https" : "Http"
       timeout             = 15
       unhealthy_threshold = 3
     }
@@ -90,15 +90,17 @@ resource "azurerm_application_gateway" "ag" {
     for_each = [for app in var.frontends : {
       name                  = app.name
       cookie_based_affinity = try(title(app.appgw_cookie_based_affinity), "Disabled")
+      host_name             = try(app.host_name, null)
     }]
 
     content {
       name                  = backend_http_settings.value.name
       probe_name            = backend_http_settings.value.name
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
-      port                  = 80
-      protocol              = "Http"
+      port                  = var.ssl_enable ? 443 : 80
+      protocol              = var.ssl_enable ? "Https" : "Http"
       request_timeout       = 30
+      host_name             = var.ssl_enable ? backend_http_settings.value.host_name : null
     }
   }
 
@@ -110,10 +112,11 @@ resource "azurerm_application_gateway" "ag" {
 
     content {
       name                           = http_listener.value.name
-      frontend_ip_configuration_name = "appGwPrivateFrontendIp"
-      frontend_port_name             = "http"
-      protocol                       = "Http"
+      frontend_ip_configuration_name = var.ssl_enable ? "appGwPublicFrontendIp" : "appGwPrivateFrontendIp"
+      frontend_port_name             = var.ssl_enable ? "Https" : "Http"
+      protocol                       = var.ssl_enable ? "Https" : "Http"
       host_name                      = http_listener.value.custom_domain
+      ssl_certificate_name           = var.ssl_certificate_name != null ? var.ssl_certificate_name : ""
     }
   }
 
