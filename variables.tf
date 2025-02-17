@@ -121,6 +121,15 @@ variable "ssl_certificate_name" {
   default     = null
 }
 
+variable "vault_name" {
+  description = "vault name"
+}
+
+variable "key_vault_resource_group" {
+  description = "Name of the resource group for the keyvault"
+  type        = string
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string
