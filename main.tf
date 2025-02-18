@@ -71,7 +71,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "probe" {
     for_each = [for app in var.frontends : {
       name = app.name
-      host = lookup(app, "host_name", "app.custom_domain")
+      host = lookup(app, "host_name", lookup(app, "custom_domain", ""))
       path = lookup(app, "health_path", "/health/liveness")
     }]
 
@@ -121,7 +121,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       name                           = http_listener.value.name
       frontend_ip_configuration_name = "appGwPrivateFrontendIp"
-      frontend_port_name             = "Http"
+      frontend_port_name             = "http"
       protocol                       = "Http"
       host_name                      = http_listener.value.custom_domain
     }
@@ -136,7 +136,7 @@ resource "azurerm_application_gateway" "ag" {
     content {
       name                           = http_listener.value.name
       frontend_ip_configuration_name = "appGwPublicFrontendIp"
-      frontend_port_name             = "Https"
+      frontend_port_name             = "https"
       protocol                       = "Https"
       host_name                      = http_listener.value.custom_domain
       ssl_certificate_name           = var.ssl_certificate_name
