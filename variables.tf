@@ -118,7 +118,6 @@ variable "ssl_enable" {
 variable "ssl_certificate_name" {
   description = "The name of the ssl_certificate"
   type        = string
-  default     = null
 }
 
 variable "usage_name" {
@@ -128,13 +127,11 @@ variable "usage_name" {
 
 variable "vault_name" {
   description = "vault name"
-  default     = "null"
 }
 
 variable "key_vault_resource_group" {
   description = "Name of the resource group for the keyvault"
   type        = string
-  default     = "null"
 }
 
 variable "waf_policy_name" {
