@@ -113,18 +113,33 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "http_listener" {
-    for_each = [for app in var.frontends : {
+    for_each = !var.ssl_enable ? [for app in var.frontends : {
       name          = app.name
       custom_domain = app.custom_domain
-    }]
+    }] : []
 
     content {
       name                           = http_listener.value.name
-      frontend_ip_configuration_name = var.ssl_enable ? "appGwPublicFrontendIp" : "appGwPrivateFrontendIp"
-      frontend_port_name             = var.ssl_enable ? "Https" : "Http"
-      protocol                       = var.ssl_enable ? "Https" : "Http"
+      frontend_ip_configuration_name = "appGwPrivateFrontendIp"
+      frontend_port_name             = "Http"
+      protocol                       = "Http"
       host_name                      = http_listener.value.custom_domain
-      ssl_certificate_name           = var.ssl_enable ? var.ssl_certificate_name : ""
+    }
+  }
+
+  dynamic "http_listener" {
+    for_each = var.ssl_enable ? [for app in var.frontends : {
+      name          = app.name
+      custom_domain = app.custom_domain
+    }] : []
+
+    content {
+      name                           = http_listener.value.name
+      frontend_ip_configuration_name = "appGwPublicFrontendIp"
+      frontend_port_name             = "Https"
+      protocol                       = "Https"
+      host_name                      = http_listener.value.custom_domain
+      ssl_certificate_name           = var.ssl_certificate_name
     }
   }
 
