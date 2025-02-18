@@ -12,7 +12,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "identity" {
   count        = var.ssl_enable ? 1 : 0
-  principal_id = azurerm_user_assigned_identity.identity.principal_id
+  principal_id = azurerm_user_assigned_identity.identity[0].principal_id
   scope        = data.azurerm_key_vault.main.id
 
   role_definition_name = "Key Vault Secrets User"
