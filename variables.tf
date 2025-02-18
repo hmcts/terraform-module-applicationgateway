@@ -121,6 +121,11 @@ variable "ssl_certificate_name" {
   default     = null
 }
 
+variable "usage_name" {
+  description = "describes usage of app gateway, for use in naming resources"
+  default     = "pubsub"
+}
+
 variable "vault_name" {
   description = "vault name"
 }
