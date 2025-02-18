@@ -124,7 +124,7 @@ resource "azurerm_application_gateway" "ag" {
       frontend_port_name             = var.ssl_enable ? "Https" : "Http"
       protocol                       = var.ssl_enable ? "Https" : "Http"
       host_name                      = http_listener.value.custom_domain
-      ssl_certificate_name           = var.ssl_certificate_name != null ? var.ssl_certificate_name : ""
+      ssl_certificate_name           = var.ssl_enable ? var.ssl_certificate_name : ""
     }
   }
 
