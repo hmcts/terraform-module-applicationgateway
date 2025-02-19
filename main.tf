@@ -43,6 +43,14 @@ resource "azurerm_application_gateway" "ag" {
     port = 80
   }
 
+  dynamic "frontend_port" {
+    for_each = var.ssl_enable ? [1] : []
+    content {
+      name = "https"
+      port = 443
+    }
+  }
+
   frontend_ip_configuration {
     name                 = "appGwPublicFrontendIp"
     public_ip_address_id = azurerm_public_ip.app_gw[0].id
