@@ -110,6 +110,30 @@ variable "pubsub_subnet" {
   default     = false
 }
 
+variable "ssl_enable" {
+  type    = bool
+  default = false
+}
+
+variable "ssl_certificate_name" {
+  description = "The name of the ssl_certificate"
+  type        = string
+}
+
+variable "usage_name" {
+  description = "describes usage of app gateway, for use in naming resources"
+  default     = "pubsub"
+}
+
+variable "vault_name" {
+  description = "vault name"
+}
+
+variable "key_vault_resource_group" {
+  description = "Name of the resource group for the keyvault"
+  type        = string
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string

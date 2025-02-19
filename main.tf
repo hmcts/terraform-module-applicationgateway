@@ -71,7 +71,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "probe" {
     for_each = [for app in var.frontends : {
       name = app.name
-      host = app.custom_domain
+      host = lookup(app, "host_name", lookup(app, "custom_domain", ""))
       path = lookup(app, "health_path", "/health/liveness")
     }]
 
@@ -80,7 +80,7 @@ resource "azurerm_application_gateway" "ag" {
       name                = probe.value.name
       host                = probe.value.host
       path                = probe.value.path
-      protocol            = "Http"
+      protocol            = var.ssl_enable ? "Https" : "Http"
       timeout             = 15
       unhealthy_threshold = 3
     }
@@ -90,23 +90,41 @@ resource "azurerm_application_gateway" "ag" {
     for_each = [for app in var.frontends : {
       name                  = app.name
       cookie_based_affinity = try(title(app.appgw_cookie_based_affinity), "Disabled")
+      host_name             = try(app.host_name, null)
     }]
 
     content {
       name                  = backend_http_settings.value.name
       probe_name            = backend_http_settings.value.name
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
-      port                  = 80
-      protocol              = "Http"
+      port                  = var.ssl_enable ? 443 : 80
+      protocol              = var.ssl_enable ? "Https" : "Http"
       request_timeout       = 30
+      host_name             = var.ssl_enable ? backend_http_settings.value.host_name : null
+    }
+  }
+
+  dynamic "identity" {
+    for_each = var.ssl_enable ? [1] : []
+    content {
+      identity_ids = [azurerm_user_assigned_identity.identity[0].id]
+      type         = "UserAssigned"
+    }
+  }
+
+  dynamic "ssl_certificate" {
+    for_each = var.ssl_enable ? [1] : []
+    content {
+      name                = var.ssl_certificate_name
+      key_vault_secret_id = data.azurerm_key_vault_secret.certificate.versionless_id
     }
   }
 
   dynamic "http_listener" {
-    for_each = [for app in var.frontends : {
+    for_each = !var.ssl_enable ? [for app in var.frontends : {
       name          = app.name
       custom_domain = app.custom_domain
-    }]
+    }] : []
 
     content {
       name                           = http_listener.value.name
@@ -114,6 +132,22 @@ resource "azurerm_application_gateway" "ag" {
       frontend_port_name             = "http"
       protocol                       = "Http"
       host_name                      = http_listener.value.custom_domain
+    }
+  }
+
+  dynamic "http_listener" {
+    for_each = var.ssl_enable ? [for app in var.frontends : {
+      name          = app.name
+      custom_domain = app.custom_domain
+    }] : []
+
+    content {
+      name                           = http_listener.value.name
+      frontend_ip_configuration_name = "appGwPublicFrontendIp"
+      frontend_port_name             = "https"
+      protocol                       = "Https"
+      host_name                      = http_listener.value.custom_domain
+      ssl_certificate_name           = var.ssl_certificate_name
     }
   }
 
