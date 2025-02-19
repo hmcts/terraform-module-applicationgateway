@@ -104,6 +104,11 @@ resource "azurerm_application_gateway" "ag" {
     }
   }
 
+  identity {
+    identity_ids = [azurerm_user_assigned_identity.identity.id]
+    type         = "UserAssigned"
+  }
+
   dynamic "ssl_certificate" {
     for_each = var.ssl_enable ? [1] : []
     content {
