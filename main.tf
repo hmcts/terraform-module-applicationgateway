@@ -51,7 +51,7 @@ resource "azurerm_application_gateway" "ag" {
     }
   }
 
-  dynamic "ssl_policy" {
+  dynamic "pubsubappgw_ssl_policy" {
     for_each = var.pubsubappgw_ssl_policy != null ? [var.pubsubappgw_ssl_policy] : []
     content {
       disabled_protocols   = var.pubsubappgw_ssl_policy.policy_type == null && var.pubsubappgw_ssl_policy.policy_name == null ? var.pubsubappgw_ssl_policy.disabled_protocols : null
