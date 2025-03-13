@@ -174,3 +174,15 @@ variable "waf_custom_rules" {
   }))
   default = null
 }
+
+variable "pubsubappgw_ssl_policy" {
+  description = "Pubsub pplication Gateway SSL configuration"
+  type = object({
+    disabled_protocols   = optional(list(string))
+    policy_type          = optional(string)
+    policy_name          = optional(string)
+    cipher_suites        = optional(list(string))
+    min_protocol_version = optional(string)
+  })
+  default = null
+}

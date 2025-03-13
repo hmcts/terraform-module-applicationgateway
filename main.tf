@@ -51,6 +51,17 @@ resource "azurerm_application_gateway" "ag" {
     }
   }
 
+  dynamic "ssl_policy" {
+    for_each = var.pubsubappgw_ssl_policy != null ? [var.pubsubappgw_ssl_policy] : []
+    content {
+      disabled_protocols   = var.pubsubappgw_ssl_policy.policy_type == null && var.pubsubappgw_ssl_policy.policy_name == null ? var.pubsubappgw_ssl_policy.disabled_protocols : null
+      policy_type          = lookup(var.pubsubappgw_ssl_policy, "policy_type", "Predefined")
+      policy_name          = var.pubsubappgw_ssl_policy.policy_type == "Predefined" ? var.pubsubappgw_ssl_policy.policy_name : null
+      cipher_suites        = var.pubsubappgw_ssl_policy.policy_type == "Custom" ? var.pubsubappgw_ssl_policy.cipher_suites : null
+      min_protocol_version = var.pubsubappgw_ssl_policy.min_protocol_version
+    }
+  }
+
   frontend_ip_configuration {
     name                 = "appGwPublicFrontendIp"
     public_ip_address_id = azurerm_public_ip.app_gw[0].id
