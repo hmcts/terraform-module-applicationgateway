@@ -11,6 +11,14 @@
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
   resource_prefix       = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
+
+  default_ssl_policy = {
+    disabled_protocols   = null
+    policy_type          = "Predefined"
+    policy_name          = "AppGwSslPolicy20220101"
+    cipher_suites        = null
+    min_protocol_version = null
+  }
 }
 
 resource "azurerm_application_gateway" "ag" {
@@ -52,13 +60,13 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "ssl_policy" {
-    for_each = var.pubsubappgw_ssl_policy != null ? [var.pubsubappgw_ssl_policy] : []
+    for_each = var.pubsubappgw_ssl_policy != null ? [var.pubsubappgw_ssl_policy] : [local.default_ssl_policy]
     content {
-      disabled_protocols   = var.pubsubappgw_ssl_policy.policy_type == null && var.pubsubappgw_ssl_policy.policy_name == null ? var.pubsubappgw_ssl_policy.disabled_protocols : null
-      policy_type          = lookup(var.pubsubappgw_ssl_policy, "policy_type", "Predefined")
-      policy_name          = var.pubsubappgw_ssl_policy.policy_type == "Predefined" ? var.pubsubappgw_ssl_policy.policy_name : null
-      cipher_suites        = var.pubsubappgw_ssl_policy.policy_type == "Custom" ? var.pubsubappgw_ssl_policy.cipher_suites : null
-      min_protocol_version = var.pubsubappgw_ssl_policy.min_protocol_version
+      disabled_protocols   = ssl_policy[0].policy_type == null && ssl_policy[0].policy_name == null ? ssl_policy[0].disabled_protocols : null
+      policy_type          = lookup(ssl_policy[0], "policy_type", "Predefined")
+      policy_name          = ssl_policy[0].policy_type == "Predefined" ? ssl_policy[0].policy_name : null
+      cipher_suites        = ssl_policy[0].policy_type == "Custom" ? ssl_policy[0].cipher_suites : null
+      min_protocol_version = ssl_policy[0].min_protocol_version
     }
   }
 
