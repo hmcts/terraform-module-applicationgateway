@@ -175,7 +175,7 @@ variable "waf_custom_rules" {
   default = null
 }
 
-variable "pubsubappgw_ssl_policy" {
+variable "ssl_policy" {
   description = "Pubsub pplication Gateway SSL configuration"
   type = object({
     disabled_protocols   = optional(list(string))
@@ -184,5 +184,11 @@ variable "pubsubappgw_ssl_policy" {
     cipher_suites        = optional(list(string))
     min_protocol_version = optional(string)
   })
-  default = null
+  default = {
+    disabled_protocols   = null
+    policy_type          = "Predefined"
+    policy_name          = "AppGwSslPolicy20220101"
+    cipher_suites        = null
+    min_protocol_version = null
+  }
 }
