@@ -58,7 +58,7 @@ resource "azurerm_application_gateway" "ag" {
       policy_type          = lookup(var.ssl_policy, "policy_type", "Predefined")
       policy_name          = var.ssl_policy.policy_type == "Predefined" ? var.ssl_policy.policy_name : null
       cipher_suites        = var.ssl_policy.policy_type == "Custom" ? var.ssl_policy.cipher_suites : null
-      min_protocol_version = var.ssl_policy.min_protocol_version
+      min_protocol_version = var.ssl_policy.policy_type == "Custom" ? var.ssl_policy.min_protocol_version : null
     }
   }
 
@@ -95,13 +95,19 @@ resource "azurerm_application_gateway" "ag" {
     }]
 
     content {
-      interval            = 20
-      name                = probe.value.name
-      host                = probe.value.host
-      path                = probe.value.path
-      protocol            = var.ssl_enable ? "Https" : "Http"
-      timeout             = 15
-      unhealthy_threshold = 3
+      interval                                  = 20
+      name                                      = probe.value.name
+      host                                      = probe.value.host
+      path                                      = probe.value.path
+      protocol                                  = var.ssl_enable ? "Https" : "Http"
+      minimum_servers                           = 0
+      pick_host_name_from_backend_http_settings = false
+      timeout                                   = 15
+      unhealthy_threshold                       = 3
+
+      match {
+        status_code = ["200-399"]
+      }
     }
   }
 
