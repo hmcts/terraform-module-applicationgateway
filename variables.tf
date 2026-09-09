@@ -115,6 +115,12 @@ variable "ssl_enable" {
   default = false
 }
 
+variable "private_ssl_enable" {
+  description = "Create HTTPS listeners on the private frontend as well as the public frontend"
+  type        = bool
+  default     = false
+}
+
 variable "ssl_certificate_name" {
   description = "The name of the ssl_certificate"
   type        = string

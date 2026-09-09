@@ -161,6 +161,22 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "http_listener" {
+    for_each = var.ssl_enable && var.private_ssl_enable ? [for app in var.frontends : {
+      name          = app.name
+      custom_domain = app.custom_domain
+    }] : []
+
+    content {
+      name                           = "${http_listener.value.name}-private"
+      frontend_ip_configuration_name = "appGwPrivateFrontendIp"
+      frontend_port_name             = "https"
+      protocol                       = "Https"
+      host_name                      = http_listener.value.custom_domain
+      ssl_certificate_name           = var.ssl_certificate_name
+    }
+  }
+
+  dynamic "http_listener" {
     for_each = var.ssl_enable ? [for app in var.frontends : {
       name          = app.name
       custom_domain = app.custom_domain
@@ -187,6 +203,23 @@ resource "azurerm_application_gateway" "ag" {
       rule_type                  = "Basic"
       priority                   = request_routing_rule.value.priority
       http_listener_name         = request_routing_rule.value.name
+      backend_address_pool_name  = request_routing_rule.value.name
+      backend_http_settings_name = request_routing_rule.value.name
+      rewrite_rule_set_name      = local.x_fwded_proto_ruleset
+    }
+  }
+
+  dynamic "request_routing_rule" {
+    for_each = var.ssl_enable && var.private_ssl_enable ? [for i, app in var.frontends : {
+      name     = app.name
+      priority = 1000 + ((i + 1) * 10)
+    }] : []
+
+    content {
+      name                       = "${request_routing_rule.value.name}-private"
+      rule_type                  = "Basic"
+      priority                   = request_routing_rule.value.priority
+      http_listener_name         = "${request_routing_rule.value.name}-private"
       backend_address_pool_name  = request_routing_rule.value.name
       backend_http_settings_name = request_routing_rule.value.name
       rewrite_rule_set_name      = local.x_fwded_proto_ruleset
