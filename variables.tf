@@ -164,9 +164,12 @@ variable "waf_managed_rules" {
 
 variable "waf_custom_rules" {
   type = list(object({
-    name      = string
-    priority  = number
-    rule_type = string
+    name                 = string
+    priority             = number
+    rule_type            = string
+    rate_limit_duration  = optional(string)
+    rate_limit_threshold = optional(number)
+    group_rate_limit_by  = optional(string)
     match_conditions = list(object({
       match_variables = list(object({
         variable_name = string

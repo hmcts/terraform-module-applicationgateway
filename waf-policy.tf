@@ -41,9 +41,12 @@ resource "azurerm_web_application_firewall_policy" "waf_policy" {
     for_each = var.waf_custom_rules != null ? var.waf_custom_rules : []
 
     content {
-      name      = custom_rules.value.name
-      priority  = custom_rules.value.priority
-      rule_type = custom_rules.value.rule_type
+      name                 = custom_rules.value.name
+      priority             = custom_rules.value.priority
+      rule_type            = custom_rules.value.rule_type
+      rate_limit_duration  = lookup(custom_rules.value, "rate_limit_duration", null)
+      rate_limit_threshold = lookup(custom_rules.value, "rate_limit_threshold", null)
+      group_rate_limit_by  = lookup(custom_rules.value, "group_rate_limit_by", null)
 
       dynamic "match_conditions" {
         for_each = custom_rules.value.match_conditions
