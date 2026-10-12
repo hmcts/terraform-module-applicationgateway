@@ -163,6 +163,12 @@ variable "user_assigned_identity_id" {
   default     = null
 }
 
+variable "ssl_certificate_secret_id" {
+  description = "Versionless Key Vault secret ID of the certificate. When set, the module does not read the secret, so the caller needs no Key Vault data access"
+  type        = string
+  default     = null
+}
+
 variable "private_link_configuration" {
   description = "Private Link configuration attached to the private frontend. Each ip_configuration takes a Dynamic IP from the subnet unless private_ip_address is set"
   type = object({

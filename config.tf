@@ -19,6 +19,7 @@ data "azurerm_key_vault" "main" {
 }
 
 data "azurerm_key_vault_secret" "certificate" {
+  count        = var.ssl_certificate_secret_id == null ? 1 : 0
   provider     = azurerm.kv
   name         = var.ssl_certificate_name != null ? var.ssl_certificate_name : "null"
   key_vault_id = data.azurerm_key_vault.main.id

@@ -162,7 +162,7 @@ resource "azurerm_application_gateway" "ag" {
     for_each = var.ssl_enable ? [1] : []
     content {
       name                = var.ssl_certificate_name
-      key_vault_secret_id = data.azurerm_key_vault_secret.certificate.versionless_id
+      key_vault_secret_id = var.ssl_certificate_secret_id != null ? var.ssl_certificate_secret_id : data.azurerm_key_vault_secret.certificate[0].versionless_id
     }
   }
 
