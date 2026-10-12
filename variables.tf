@@ -140,6 +140,45 @@ variable "key_vault_resource_group" {
   type        = string
 }
 
+variable "public_ssl_enable" {
+  description = "Create HTTPS listeners on the public frontend. Set to false with private_ssl_enable to keep the public IP free of listeners"
+  type        = bool
+  default     = true
+}
+
+variable "request_timeout" {
+  description = "Backend request timeout in seconds"
+  type        = number
+  default     = 30
+
+  validation {
+    condition     = var.request_timeout >= 1 && var.request_timeout <= 86400
+    error_message = "request_timeout must be between 1 and 86400 seconds."
+  }
+}
+
+variable "user_assigned_identity_id" {
+  description = "ID of an existing user assigned identity with access to the key vault. When set, the module does not create its own identity or role assignment"
+  type        = string
+  default     = null
+}
+
+variable "private_link_configuration" {
+  description = "Private Link configuration attached to the private frontend. Each ip_configuration takes a Dynamic IP from the subnet unless private_ip_address is set"
+  type = object({
+    subnet_name = optional(string, "app-gateway-private-link")
+    ip_configurations = optional(list(object({
+      private_ip_address = optional(string)
+    })), [{}])
+  })
+  default = null
+
+  validation {
+    condition     = var.private_link_configuration == null || try(length(var.private_link_configuration.ip_configurations) >= 1 && length(var.private_link_configuration.ip_configurations) <= 8, false)
+    error_message = "private_link_configuration.ip_configurations must contain between 1 and 8 entries."
+  }
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string

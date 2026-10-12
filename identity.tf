@@ -1,5 +1,5 @@
 resource "azurerm_user_assigned_identity" "identity" {
-  count               = var.ssl_enable ? 1 : 0
+  count               = var.ssl_enable && var.user_assigned_identity_id == null ? 1 : 0
   provider            = azurerm.hub
   name                = "${var.project}-${var.usage_name}-${var.env}-agw"
   resource_group_name = var.vnet_rg
@@ -11,7 +11,7 @@ resource "azurerm_user_assigned_identity" "identity" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "identity" {
-  count        = var.ssl_enable ? 1 : 0
+  count        = var.ssl_enable && var.user_assigned_identity_id == null ? 1 : 0
   principal_id = azurerm_user_assigned_identity.identity[0].principal_id
   scope        = data.azurerm_key_vault.main.id
 

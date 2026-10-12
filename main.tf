@@ -11,6 +11,8 @@
 locals {
   x_fwded_proto_ruleset = "x_fwded_proto"
   resource_prefix       = var.resource_prefix != null ? "${var.resource_prefix}-" : ""
+  identity_id           = var.user_assigned_identity_id != null ? var.user_assigned_identity_id : try(azurerm_user_assigned_identity.identity[0].id, null)
+  private_link_name     = "appGwPrivateLink"
 }
 
 resource "azurerm_application_gateway" "ag" {
@@ -68,10 +70,29 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   frontend_ip_configuration {
-    name                          = "appGwPrivateFrontendIp"
-    subnet_id                     = data.azurerm_subnet.app_gw.id
-    private_ip_address            = var.private_ip_address
-    private_ip_address_allocation = "Static"
+    name                            = "appGwPrivateFrontendIp"
+    subnet_id                       = data.azurerm_subnet.app_gw.id
+    private_ip_address              = var.private_ip_address
+    private_ip_address_allocation   = "Static"
+    private_link_configuration_name = var.private_link_configuration != null ? local.private_link_name : null
+  }
+
+  dynamic "private_link_configuration" {
+    for_each = var.private_link_configuration != null ? [var.private_link_configuration] : []
+    content {
+      name = local.private_link_name
+
+      dynamic "ip_configuration" {
+        for_each = private_link_configuration.value.ip_configurations
+        content {
+          name                          = "${local.private_link_name}Ip${ip_configuration.key}"
+          subnet_id                     = data.azurerm_subnet.private_link[0].id
+          private_ip_address            = ip_configuration.value.private_ip_address
+          private_ip_address_allocation = ip_configuration.value.private_ip_address != null ? "Static" : "Dynamic"
+          primary                       = ip_configuration.key == 0
+        }
+      }
+    }
   }
 
   dynamic "backend_address_pool" {
@@ -124,7 +145,7 @@ resource "azurerm_application_gateway" "ag" {
       cookie_based_affinity = backend_http_settings.value.cookie_based_affinity
       port                  = var.ssl_enable ? 443 : 80
       protocol              = var.ssl_enable ? "Https" : "Http"
-      request_timeout       = 30
+      request_timeout       = var.request_timeout
       host_name             = var.ssl_enable ? backend_http_settings.value.host_name : null
     }
   }
@@ -132,7 +153,7 @@ resource "azurerm_application_gateway" "ag" {
   dynamic "identity" {
     for_each = var.ssl_enable ? [1] : []
     content {
-      identity_ids = [azurerm_user_assigned_identity.identity[0].id]
+      identity_ids = [local.identity_id]
       type         = "UserAssigned"
     }
   }
@@ -177,7 +198,7 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "http_listener" {
-    for_each = var.ssl_enable ? [for app in var.frontends : {
+    for_each = var.ssl_enable && var.public_ssl_enable ? [for app in var.frontends : {
       name          = app.name
       custom_domain = app.custom_domain
     }] : []
@@ -193,10 +214,10 @@ resource "azurerm_application_gateway" "ag" {
   }
 
   dynamic "request_routing_rule" {
-    for_each = [for i, app in var.frontends : {
+    for_each = !var.ssl_enable || var.public_ssl_enable ? [for i, app in var.frontends : {
       name     = app.name
       priority = ((i + 1) * 10)
-    }]
+    }] : []
 
     content {
       name                       = request_routing_rule.value.name
@@ -247,6 +268,13 @@ resource "azurerm_application_gateway" "ag" {
         header_name  = "X-Forwarded-For"
         header_value = "{var_add_x_forwarded_for_proxy}"
       }
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.ssl_enable || var.public_ssl_enable || var.private_ssl_enable
+      error_message = "With ssl_enable, at least one of public_ssl_enable or private_ssl_enable must be true."
     }
   }
 }

@@ -5,6 +5,13 @@ data "azurerm_subnet" "app_gw" {
   virtual_network_name = var.vnet_name
 }
 
+data "azurerm_subnet" "private_link" {
+  count                = var.private_link_configuration != null ? 1 : 0
+  name                 = var.private_link_configuration.subnet_name
+  resource_group_name  = var.vnet_rg
+  virtual_network_name = var.vnet_name
+}
+
 data "azurerm_key_vault" "main" {
   provider            = azurerm.kv
   name                = var.vault_name
