@@ -5,6 +5,13 @@ data "azurerm_subnet" "app_gw" {
   virtual_network_name = var.vnet_name
 }
 
+data "azurerm_subnet" "private_link" {
+  count                = var.private_link_configuration != null ? 1 : 0
+  name                 = var.private_link_configuration.subnet_name
+  resource_group_name  = var.vnet_rg
+  virtual_network_name = var.vnet_name
+}
+
 data "azurerm_key_vault" "main" {
   provider            = azurerm.kv
   name                = var.vault_name
@@ -12,6 +19,7 @@ data "azurerm_key_vault" "main" {
 }
 
 data "azurerm_key_vault_secret" "certificate" {
+  count        = var.ssl_certificate_secret_id == null ? 1 : 0
   provider     = azurerm.kv
   name         = var.ssl_certificate_name != null ? var.ssl_certificate_name : "null"
   key_vault_id = data.azurerm_key_vault.main.id
