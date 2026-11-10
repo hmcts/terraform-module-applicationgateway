@@ -35,6 +35,15 @@ resource "azurerm_application_gateway" "ag" {
     max_capacity = var.max_capacity
   }
 
+  dynamic "global" {
+    for_each = var.global_configuration != null ? [var.global_configuration] : []
+    iterator = buffering
+    content {
+      request_buffering_enabled  = buffering.value.request_buffering_enabled
+      response_buffering_enabled = buffering.value.response_buffering_enabled
+    }
+  }
+
   gateway_ip_configuration {
     name      = "gateway"
     subnet_id = data.azurerm_subnet.app_gw.id

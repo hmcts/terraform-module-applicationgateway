@@ -185,6 +185,15 @@ variable "private_link_configuration" {
   }
 }
 
+variable "global_configuration" {
+  description = "Request and response buffering. Leave null to keep the Azure defaults (both enabled). Turn response buffering off for backends that stream responses. Request buffering cannot be turned off on WAF_v2"
+  type = object({
+    request_buffering_enabled  = optional(bool, true)
+    response_buffering_enabled = optional(bool, true)
+  })
+  default = null
+}
+
 variable "waf_policy_name" {
   description = "Name of the waf policy resource group"
   type        = string
